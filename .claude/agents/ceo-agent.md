@@ -104,7 +104,79 @@ Format:
 }
 ```
 
-### Step 4 — Escalation
+### Step 4 — Write the Daily Report
+
+After completing your review and issuing directives, write a structured daily report to `backend/reports/YYYY-MM-DD.json` (today's date). This report is displayed on the website so the owner can see exactly what's happening.
+
+The report must follow this exact structure:
+
+```json
+{
+  "date": "YYYY-MM-DD",
+  "generated_at": "ISO8601",
+  "pipeline_run_count": 0,
+  "team_reports": {
+    "research": {
+      "hypotheses_generated": 3,
+      "hypotheses": [
+        {"hypothesis": "...", "rationale": "...", "data_sources": "..."}
+      ],
+      "new_sources": ["source name if any"],
+      "summary": "One sentence describing what research found this session",
+      "status": "completed"
+    },
+    "discovery": {
+      "hypothesis_tested": "Name of hypothesis tested",
+      "result": "PASSED or FAILED",
+      "gate_failed": "Gate 2 - win rate 54% below 58% threshold",
+      "gate_passed_count": 2,
+      "metrics": {
+        "win_rate": 0.54,
+        "sharpe": 0.8,
+        "max_drawdown": 0.15,
+        "total_trades": 87
+      },
+      "summary": "One sentence on what was tested and what happened",
+      "status": "completed"
+    },
+    "deployment": {
+      "action": "deployed or no_deployment",
+      "strategy_name": "Name if deployed",
+      "win_rate": 0.61,
+      "sharpe": 1.2,
+      "reason": "Why deployed or why not",
+      "summary": "One sentence on deployment status",
+      "status": "completed"
+    }
+  },
+  "ceo_response": {
+    "grade": "B",
+    "headline": "Short punchy CEO quote about today",
+    "summary": "2-3 sentence brutally honest CEO assessment of today's performance",
+    "commendations": ["What the team did well today"],
+    "criticisms": ["What fell short and why it matters"],
+    "directives_issued": [
+      {"priority": 1, "directive": "...", "why": "...", "success_metric": "..."}
+    ],
+    "outlook": "One sentence on what tomorrow needs to accomplish",
+    "heat": "cold or warm or hot"
+  },
+  "stats": {
+    "total_experiments_all_time": 0,
+    "total_proven_strategies": 0,
+    "active_strategy_name": "Default Equal-Weighted",
+    "active_strategy_win_rate": null,
+    "active_strategy_sharpe": null,
+    "days_since_last_deployment": null
+  }
+}
+```
+
+Fill in ALL fields based on what actually happened this session. The `heat` field reflects CEO mood: `"hot"` = demanding/critical, `"warm"` = pushing but positive, `"cold"` = satisfied. The `headline` should sound like something Elon would actually say — short, direct, memorable.
+
+If a report for today already exists, update it rather than overwrite (merge in the latest data).
+
+### Step 5 — Escalation
 
 If any of these conditions are true, issue a RESET directive:
 

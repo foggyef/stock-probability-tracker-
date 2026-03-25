@@ -1,5 +1,6 @@
 import { useState } from "react"
 import useSWR from "swr"
+import Link from "next/link"
 import PickCard from "../components/PickCard"
 import MacroBanner from "../components/MacroBanner"
 
@@ -64,6 +65,9 @@ export default function Home() {
             <h1 className="text-2xl font-bold text-white">Morning Briefing</h1>
             <p className="text-slate-400 text-sm mt-0.5">{today}</p>
           </div>
+          <Link href="/reports" className="text-sm bg-slate-800 hover:bg-slate-700 border border-border text-slate-300 hover:text-white px-4 py-2 rounded-lg transition-colors font-medium">
+            📋 CEO Report
+          </Link>
           {data && (
             <div className="flex flex-wrap items-center gap-3 text-sm text-slate-400">
               <span className="text-green-400 font-medium">{data.summary?.buy_count ?? 0} BUY</span>
