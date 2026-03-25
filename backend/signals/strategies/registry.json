@@ -1,0 +1,5 @@
+{
+  "strategies": [],
+  "last_updated": null,
+  "notes": "Strategies are written here by strategy-discovery-agent after passing all 6 validation gates. strategy-deployment-agent monitors this file and deploys proven strategies to the live site."
+}
