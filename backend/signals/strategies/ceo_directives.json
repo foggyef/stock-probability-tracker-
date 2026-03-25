@@ -1,0 +1,32 @@
+{
+  "issued_at": null,
+  "issued_by": "ceo-agent",
+  "performance_grade": null,
+  "performance_summary": "No performance data yet. System just initialized. First run in progress.",
+  "directives": [
+    {
+      "priority": 1,
+      "directive": "First run: establish baseline. Test the most fundamentally sound hypothesis you can think of — not the most popular, the most logically defensible from first principles.",
+      "why": "We need a starting point that is grounded in economic reality, not cargo-culted from retail trading forums.",
+      "success_metric": "At least one experiment logged with full metrics within the first 3 sessions."
+    },
+    {
+      "priority": 2,
+      "directive": "Do NOT test generic RSI overbought/oversold as your first hypothesis. That is the first thing every beginner tries. Find something less obvious.",
+      "why": "If millions of traders already act on a signal, it is priced in. We need signals with information asymmetry.",
+      "success_metric": "Hypothesis is something a typical retail trader would not immediately think of."
+    },
+    {
+      "priority": 3,
+      "directive": "Prioritize testing combinations of signals from DIFFERENT categories — e.g. a technical signal confirmed by a fundamental signal. Single-source signals are fragile.",
+      "why": "First principles: a price move predicted by both technical structure AND fundamental catalyst is more reliable than either alone.",
+      "success_metric": "Tested hypothesis uses at least 2 signal categories."
+    }
+  ],
+  "if_no_proven_strategy_in_48hrs": "Escalate hypothesis ambition. Stop testing incremental variations. Test something radically different.",
+  "red_lines": [
+    "Never deploy a strategy with fewer than 50 OOS trades",
+    "Never recycle a hypothesis that already failed — log it and move on",
+    "Never report a win rate without the confidence interval"
+  ]
+}
