@@ -35,9 +35,12 @@ def get_stock_universe() -> list[str]:
 
     tickers = set()
 
+    headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"}
+
     # S&P 500
     try:
-        sp500 = pd.read_html("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies")[0]
+        html = requests.get("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies", headers=headers, timeout=15).text
+        sp500 = pd.read_html(html)[0]
         tickers.update(sp500["Symbol"].str.replace(".", "-").tolist())
         logger.info(f"Loaded {len(sp500)} S&P 500 tickers")
     except Exception as e:
@@ -45,9 +48,13 @@ def get_stock_universe() -> list[str]:
 
     # NASDAQ 100
     try:
-        nasdaq = pd.read_html("https://en.wikipedia.org/wiki/Nasdaq-100")[4]
-        tickers.update(nasdaq["Ticker"].tolist())
-        logger.info(f"Loaded NASDAQ 100 tickers")
+        html = requests.get("https://en.wikipedia.org/wiki/Nasdaq-100", headers=headers, timeout=15).text
+        tables = pd.read_html(html)
+        for t in tables:
+            if "Ticker" in t.columns:
+                tickers.update(t["Ticker"].tolist())
+                logger.info(f"Loaded NASDAQ 100 tickers")
+                break
     except Exception as e:
         logger.error(f"Failed to fetch NASDAQ 100: {e}")
 
@@ -83,6 +90,12 @@ def fetch_ohlcv(tickers: list[str], period: str = "6mo", interval: str = "1d") -
                 try:
                     if len(batch) == 1:
                         df = raw.copy()
+                    elif isinstance(raw.columns, pd.MultiIndex):
+                        # yfinance >= 0.2.x returns (Price, Ticker) MultiIndex
+                        if ticker in raw.columns.get_level_values('Ticker'):
+                            df = raw.xs(ticker, level='Ticker', axis=1).copy()
+                        else:
+                            continue
                     else:
                         df = raw[ticker].copy()
 
