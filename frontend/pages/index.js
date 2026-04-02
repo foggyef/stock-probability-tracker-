@@ -34,6 +34,10 @@ export default function Home() {
     refreshInterval: 3_000,
   })
 
+  const { data: strategy } = useSWR("/api/strategy", fetcher, {
+    refreshInterval: 60_000,
+  })
+
   const picks = data?.picks ?? []
 
   const filtered = picks.filter((p) => {
@@ -97,6 +101,44 @@ export default function Home() {
       </header>
 
       <main className="max-w-7xl mx-auto px-6 py-8">
+
+        {/* Active strategy banner */}
+        {strategy && (
+          <div className={`mb-5 rounded-xl px-5 py-3 flex flex-wrap items-center justify-between gap-3 border ${
+            strategy.active_strategy_id === "default"
+              ? "bg-slate-800/40 border-slate-700"
+              : "bg-blue-900/30 border-blue-600/50"
+          }`}>
+            <div className="flex items-center gap-3">
+              <span className="text-lg">{strategy.active_strategy_id === "default" ? "⚙️" : "🚀"}</span>
+              <div>
+                <p className="text-sm font-semibold text-white">
+                  Active Strategy: <span className={strategy.active_strategy_id === "default" ? "text-slate-400" : "text-blue-300"}>{strategy.active_strategy_name}</span>
+                </p>
+                <p className="text-xs text-slate-500">
+                  {strategy.deployed_at
+                    ? `Deployed ${new Date(strategy.deployed_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
+                    : "Default weights — no proven strategy deployed yet"}
+                </p>
+              </div>
+            </div>
+            {strategy.performance?.backtested_win_rate && (
+              <div className="flex gap-4 text-center">
+                <div>
+                  <p className="text-xs text-slate-500">Backtested Win Rate</p>
+                  <p className="text-sm font-bold text-green-400">{(strategy.performance.backtested_win_rate * 100).toFixed(1)}%</p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Sharpe</p>
+                  <p className="text-sm font-bold text-blue-400">{strategy.performance.backtested_sharpe?.toFixed(2) ?? "—"}</p>
+                </div>
+              </div>
+            )}
+            <Link href="/reports" className="text-xs text-slate-400 hover:text-white transition-colors">
+              View CEO Report →
+            </Link>
+          </div>
+        )}
 
         {/* Live scan progress banner */}
         {scanStatus?.running && (
