@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 import ta
 
-from .config import HOLD_TIMES
+from .config import HOLD_TIMES, RSI_OVERSOLD, RSI_OVERBOUGHT, VOLUME_MULTIPLIER
 from .strategy_loader import get_weights, get_filters, get_hold_time_config, get_risk_thresholds
 
 logger = logging.getLogger(__name__)
