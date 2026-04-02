@@ -30,6 +30,10 @@ export default function Home() {
     shouldRetryOnError: false,
   })
 
+  const { data: scanStatus } = useSWR("/api/scan/status", fetcher, {
+    refreshInterval: 3_000,
+  })
+
   const picks = data?.picks ?? []
 
   const filtered = picks.filter((p) => {
@@ -65,9 +69,14 @@ export default function Home() {
             <h1 className="text-2xl font-bold text-white">Morning Briefing</h1>
             <p className="text-slate-400 text-sm mt-0.5">{today}</p>
           </div>
-          <Link href="/reports" className="text-sm bg-slate-800 hover:bg-slate-700 border border-border text-slate-300 hover:text-white px-4 py-2 rounded-lg transition-colors font-medium">
-            📋 CEO Report
-          </Link>
+          <div className="flex gap-2">
+            <Link href="/portfolio" className="text-sm bg-slate-800 hover:bg-slate-700 border border-border text-slate-300 hover:text-white px-4 py-2 rounded-lg transition-colors font-medium">
+              💼 Portfolio
+            </Link>
+            <Link href="/reports" className="text-sm bg-slate-800 hover:bg-slate-700 border border-border text-slate-300 hover:text-white px-4 py-2 rounded-lg transition-colors font-medium">
+              📋 CEO Report
+            </Link>
+          </div>
           {data && (
             <div className="flex flex-wrap items-center gap-3 text-sm text-slate-400">
               <span className="text-green-400 font-medium">{data.summary?.buy_count ?? 0} BUY</span>
@@ -88,6 +97,20 @@ export default function Home() {
       </header>
 
       <main className="max-w-7xl mx-auto px-6 py-8">
+
+        {/* Live scan progress banner */}
+        {scanStatus?.running && (
+          <div className="mb-6 bg-blue-900/40 border border-blue-600/50 rounded-xl px-5 py-4 flex items-center gap-4">
+            <div className="flex-shrink-0">
+              <div className="w-3 h-3 rounded-full bg-blue-400 animate-pulse" />
+            </div>
+            <div>
+              <p className="text-blue-300 font-semibold text-sm">Scan in progress...</p>
+              <p className="text-blue-400 text-xs mt-0.5">{scanStatus.step}{scanStatus.progress ? ` — ${scanStatus.progress}` : ""}</p>
+            </div>
+            <p className="ml-auto text-xs text-blue-500">Refreshes automatically when done</p>
+          </div>
+        )}
 
         {/* Loading */}
         {isLoading && (
